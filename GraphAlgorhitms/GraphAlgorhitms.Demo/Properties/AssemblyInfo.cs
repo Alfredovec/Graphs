@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GraphAlgorhitms.Kruskal")]
+[assembly: AssemblyTitle("GraphAlgorhitms.Demo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GraphAlgorhitms.Kruskal")]
+[assembly: AssemblyProduct("GraphAlgorhitms.Demo")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bd008a3d-2496-44a9-b962-78f74bb907ff")]
+[assembly: Guid("c2ec91b9-ffe3-48da-9de0-a823c1f55d54")]
 
 // Version information for an assembly consists of the following four values:
 //

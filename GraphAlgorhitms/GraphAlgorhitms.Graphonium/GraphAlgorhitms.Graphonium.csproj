@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0228DA5A-B4C7-49A1-8BA2-C6E7197CC779}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3FF768CF-B0A7-4C33-80CD-40F2E914D10C}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GraphAlgorhitms.Console</RootNamespace>
-    <AssemblyName>GraphAlgorhitms.Console</AssemblyName>
+    <RootNamespace>GraphAlgorhitms.Graphonium</RootNamespace>
+    <AssemblyName>GraphAlgorhitms.Graphonium</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,16 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Models\Edge.cs" />
+    <Compile Include="Models\Graph.cs" />
+    <Compile Include="Models\Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\GraphUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GraphAlgorhitms.Demo\GraphAlgorhitms.Demo.csproj">
-      <Project>{633E3EBA-491C-405D-9CA2-2FB288233F94}</Project>
-      <Name>GraphAlgorhitms.Demo</Name>
+    <ProjectReference Include="..\GraphAlgorhitms.Infrastructure\GraphAlgorhitms.Infrastructure.csproj">
+      <Project>{D78B74E9-F414-4957-9977-39EC3E304715}</Project>
+      <Name>GraphAlgorhitms.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
