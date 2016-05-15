@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using GraphAlgorhitms.Graphonium.Models;
 using GraphAlgorhitms.Infrastructure;
 
-namespace GraphAlgorhitms.Sources.Prim
+namespace GraphAlgorhitms.Sources.MinOstTree.Prim
 {
     public class Prim
     {

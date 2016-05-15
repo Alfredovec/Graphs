@@ -17,12 +17,12 @@ namespace GraphAlgorhitms.Graphonium.Models
 
         public virtual ICollection<Edge> OutgoingEdges
         {
-            get { return Edges.Where(e => e.VertexBegin == this).ToList(); }
+            get { return Edges.Where(e => e.VertexBegin.Number == this.Number).ToList(); }
         }
 
         public virtual ICollection<Edge> IncomingEdges
         {
-            get { return Edges.Where(e => e.VertexEnd == this).ToList(); }
+            get { return Edges.Where(e => e.VertexEnd.Number == this.Number).ToList(); }
         }
     }
 }

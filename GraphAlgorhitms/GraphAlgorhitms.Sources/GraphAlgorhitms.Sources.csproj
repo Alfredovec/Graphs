@@ -39,9 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Kruskal\Kruskal.cs" />
-    <Compile Include="Prim\Prim.cs" />
+    <Compile Include="MaxFlow\FordFulkerson\FordFulkerson.cs" />
+    <Compile Include="MaxFlow\FordFulkerson\FordFulkersonEdge.cs" />
+    <Compile Include="MinOstTree\Kruskal\Kruskal.cs" />
+    <Compile Include="MinOstTree\Prim\Prim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShortestWay\BellmanFord\BellmanFord.cs" />
+    <Compile Include="ShortestWay\BellmanFord\BellmanFordVertex.cs" />
+    <Compile Include="ShortestWay\Dijkstra\DijkstraVertex.cs" />
+    <Compile Include="ShortestWay\Dijkstra\Dijkstra.cs" />
+    <Compile Include="ShortestWay\Floyd\Floyd.cs" />
+    <Compile Include="TravellingSalesman\TravellingSalesman.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphAlgorhitms.Graphonium\GraphAlgorhitms.Graphonium.csproj">

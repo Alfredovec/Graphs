@@ -13,7 +13,12 @@ namespace GraphAlgorhitms.Console
         static void Main(string[] args)
         {
             // new KruskalDemo().Run();
-            new PrimDemo().Run();
+            // new PrimDemo().Run();
+            // new DijkstraDemo().Run();
+            // new BellmanFordDemo().Run();
+            // new FloydDemo().Run();
+            // new FordFulkersonDemo().Run();
+            new TravellingSalesmanProblemDemo().Run();
 
             System.Console.ReadLine();
         }

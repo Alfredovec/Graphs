@@ -1,12 +1,9 @@
-using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GraphAlgorhitms.Graphonium.Models;
 using GraphAlgorhitms.Infrastructure;
 
-namespace GraphAlgorhitms.Sources.Kruskal
+namespace GraphAlgorhitms.Sources.MinOstTree.Kruskal
 {
     public class Kruskal
     {

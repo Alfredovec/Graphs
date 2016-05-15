@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using GraphAlgorhitms.Graphonium.Tools;
 using GraphAlgorhitms.Infrastructure;
 using GraphAlgorhitms.IO;
-using GraphAlgorhitms.Sources.Kruskal;
-using GraphAlgorhitms.Sources.Prim;
+using GraphAlgorhitms.Sources.MinOstTree.Prim;
 
 namespace GraphAlgorhitms.Demo
 {

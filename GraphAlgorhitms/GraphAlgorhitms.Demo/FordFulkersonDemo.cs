@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 using GraphAlgorhitms.Graphonium.Tools;
 using GraphAlgorhitms.Infrastructure;
 using GraphAlgorhitms.IO;
-using GraphAlgorhitms.Sources.MinOstTree.Kruskal;
+using GraphAlgorhitms.Sources.MaxFlow.FordFulkerson;
 
 namespace GraphAlgorhitms.Demo
 {
-    public class KruskalDemo : IRunnable
+    public class FordFulkersonDemo : IRunnable
     {
         public void Run()
         {
             var text = TextUtils.Read(Globals.InputFilePath);
 
             var initGraph = GraphUtils.Get(text);
-            var kruskal = new Kruskal();
-            var ostGraph = kruskal.GetMinOst(initGraph);
+            var bellmanFord = new FordFulkerson();
+            var maxFlow = bellmanFord.GetMaxFlow(initGraph);
 
-            TextUtils.Write(Globals.OutputFilePath, ostGraph.Edges.Sum(e => e.Weight).ToString());
+            TextUtils.Write(Globals.OutputFilePath, maxFlow.ToString());
         }
     }
 }
