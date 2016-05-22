@@ -20,7 +20,12 @@ namespace GraphAlgorhitms.Demo
             var kruskal = new Kruskal();
             var ostGraph = kruskal.GetMinOst(initGraph);
 
-            TextUtils.Write(Globals.OutputFilePath, ostGraph.Edges.Sum(e => e.Weight).ToString());
+            var stringResult = string.Empty;
+            stringResult += ostGraph.Edges.Sum(e => e.Weight).ToString() + Globals.LineSeparator;
+            stringResult += ostGraph.Edges.Aggregate(string.Empty,
+                (s, edge) => s += edge.VertexBegin.Number.ToString() + edge.VertexEnd.Number.ToString() + Globals.LineSeparator);
+
+            TextUtils.Write(Globals.OutputFilePath, stringResult);
         }
     }
 }

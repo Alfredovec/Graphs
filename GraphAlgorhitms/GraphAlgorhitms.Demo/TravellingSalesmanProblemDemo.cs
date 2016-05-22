@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,15 +16,36 @@ namespace GraphAlgorhitms.Demo
     {
         public void Run()
         {
-            var text = TextUtils.Read(Globals.InputFilePath);
+            for (int j = 0; j < 1; j++)
+            {
+                var text = TextUtils.Read(Globals.InputFilePath);
+                var initGraph = GraphUtils.GetFromFile(text);
+                try
+                {
+                    var travellingSalesman = new TravellingSalesman();
+                    var minPath = travellingSalesman.GetMinPath(initGraph);
+                    var result = minPath.Aggregate("", (s, i) => s += i + Globals.Space.ToString());
 
-            var initGraph = GraphUtils.Get(text);
-            var travellingSalesman = new TravellingSalesman();
-            var minPath = travellingSalesman.GetMinPath(initGraph);
+                    TextUtils.Write(Globals.OutputFilePath, result);
 
-            var result = minPath.Aggregate("", (s, i) => s += i + Globals.Space.ToString());
+                    if (result[result.Length - 2] != '1')
+                    {
+                        throw new Exception("Wrooong");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var badGraph = initGraph.Vertexes.Count + Globals.Space + initGraph.Edges.Count + Globals.LineSeparator;
+                    foreach (var edge in initGraph.Edges)
+                    {
+                        badGraph += edge.VertexBegin.Number + Globals.Space + edge.VertexEnd.Number + Globals.Space + edge.Weight + Globals.LineSeparator;
+                    }
+                    File.WriteAllText("files/badgraph.txt", badGraph);
+                    Console.Write(ex.Message);
+                }
+            }
 
-            TextUtils.Write(Globals.OutputFilePath, result);
+            var success = true;
         }
     }
 }

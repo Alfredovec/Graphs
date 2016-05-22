@@ -11,7 +11,6 @@ namespace GraphAlgorhitms.Sources.MaxFlow.FordFulkerson
 
         private readonly Stack<Tuple<int, int>> _wayStack = new Stack<Tuple<int, int>>();
         private readonly List<Tuple<int, int>> _unavailableEdges = new List<Tuple<int, int>>();
-        private int _lowestDelta = int.MaxValue;
 
         private readonly Func<Vertex, IEnumerable<Edge>> _availableEdgesFrom = vertex =>
         {
@@ -30,10 +29,9 @@ namespace GraphAlgorhitms.Sources.MaxFlow.FordFulkerson
             {
                 _wayStack.Clear();
                 _unavailableEdges.Clear();
-                _lowestDelta = int.MaxValue;
             } while (TryFindWay(startVertex, endVertex));
 
-            var result = startVertex.Edges.Sum(e => ((FordFulkersonEdge) e).Flow);
+            var result = startVertex.Edges.Sum(e => ((FordFulkersonEdge)e).Flow);
 
             return result;
         }
@@ -47,33 +45,42 @@ namespace GraphAlgorhitms.Sources.MaxFlow.FordFulkerson
             }
 
             var found = false;
-
-            var availableEdges = _availableEdgesFrom(originVertex)
-                .Where(e => !_unavailableEdges.Any(t => t.Item1 == e.VertexBegin.Number && t.Item2 == e.VertexEnd.Number));
-            var availableEdge = availableEdges.FirstOrDefault();
-            if (availableEdge != null)
+            IEnumerable<Edge> availableEdges;
+            do
             {
-                Vertex nextVertex;
-                if (availableEdge.VertexBegin == originVertex)
+                availableEdges = _availableEdgesFrom(originVertex)
+                    .Where(e => !_unavailableEdges.Any(t => t.Item1 == e.VertexBegin.Number && t.Item2 == e.VertexEnd.Number));
+                var availableEdge = availableEdges.FirstOrDefault();
+                if (availableEdge != null)
                 {
-                    _lowestDelta = Math.Min(_lowestDelta, availableEdge.Weight - ((FordFulkersonEdge)availableEdge).Flow);
-                    nextVertex = availableEdge.VertexEnd;
+                    Vertex nextVertex;
+                    if (availableEdge.VertexBegin == originVertex)
+                    {
+                        nextVertex = availableEdge.VertexEnd;
+                    }
+                    else
+                    {
+                        nextVertex = availableEdge.VertexBegin;
+                    }
+                    _wayStack.Push(new Tuple<int, int>(availableEdge.VertexBegin.Number, availableEdge.VertexEnd.Number));
+                    _unavailableEdges.Add(new Tuple<int, int>(availableEdge.VertexBegin.Number,
+                        availableEdge.VertexEnd.Number));
+                    _unavailableEdges.Add(new Tuple<int, int>(availableEdge.VertexEnd.Number,
+                        availableEdge.VertexBegin.Number));
+
+                    found |= TryFindWay(nextVertex, destinationVertex);
                 }
                 else
                 {
-                    _lowestDelta = Math.Min(_lowestDelta, ((FordFulkersonEdge)availableEdge).Flow);
-                    nextVertex = availableEdge.VertexBegin;
+                    GoBack();
+                    return false;
                 }
-                _wayStack.Push(new Tuple<int, int>(availableEdge.VertexBegin.Number, availableEdge.VertexEnd.Number));
-                _unavailableEdges.Add(new Tuple<int, int>(availableEdge.VertexBegin.Number, availableEdge.VertexEnd.Number));
-                _unavailableEdges.Add(new Tuple<int, int>(availableEdge.VertexEnd.Number, availableEdge.VertexBegin.Number));
-
-                found |= TryFindWay(nextVertex, destinationVertex);
             }
-            else
+            while (!found && availableEdges.Any());
+
+            if (!availableEdges.Any() && _wayStack.Any())
             {
                 GoBack();
-                return false;
             }
 
             return found;
@@ -89,6 +96,7 @@ namespace GraphAlgorhitms.Sources.MaxFlow.FordFulkerson
 
         private void ApplyWayChanges()
         {
+            var delta = CalculateDelta(_wayStack.ToList());
             var endpointVertex = _wayStack.Peek().Item2;
             while (_wayStack.Any())
             {
@@ -99,10 +107,34 @@ namespace GraphAlgorhitms.Sources.MaxFlow.FordFulkerson
                 var to = previuosStep.Item2;
 
                 var edge = _workGraph.Edges.Single(e => e.VertexBegin.Number == from && e.VertexEnd.Number == to);
-                ((FordFulkersonEdge) edge).Flow += directOrder ? _lowestDelta : -_lowestDelta;
+                ((FordFulkersonEdge)edge).Flow += directOrder ? delta : -delta;
 
-                endpointVertex = directOrder? previuosStep.Item1 : previuosStep.Item2;
+                endpointVertex = directOrder ? previuosStep.Item1 : previuosStep.Item2;
             }
+        }
+
+        private int CalculateDelta(List<Tuple<int, int>> list)
+        {
+            var lowestDelta = int.MaxValue;
+            var endpointVertex = list.First().Item2;
+            while (list.Any())
+            {
+                var previuosStep = list.First();
+                list.Remove(previuosStep);
+                var directOrder = previuosStep.Item2 == endpointVertex;
+
+                var from = previuosStep.Item1;
+                var to = previuosStep.Item2;
+
+                var edge = _workGraph.Edges.Single(e => e.VertexBegin.Number == from && e.VertexEnd.Number == to);
+                var delta = directOrder ? edge.Weight - ((FordFulkersonEdge)edge).Flow : ((FordFulkersonEdge)edge).Flow;
+
+                lowestDelta = Math.Min(delta, lowestDelta);
+
+                endpointVertex = directOrder ? previuosStep.Item1 : previuosStep.Item2;
+            }
+
+            return lowestDelta;
         }
 
         private Graph CastToFordFulkerson(Graph graph)

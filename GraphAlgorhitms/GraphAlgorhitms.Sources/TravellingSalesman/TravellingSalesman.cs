@@ -7,31 +7,33 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
 {
     public class TravellingSalesman
     {
+        List<Tuple<int, int>> _result = new List<Tuple<int, int>>();
+        private double[,] matrix;
+
         public int[] GetMinPath(Graph initGraph)
         {
-            var initMatrix = GetMatrix(initGraph);
-            var result = new List<Tuple<int, int>>();
+            InitMatrix(initGraph);
 
-            while (result.Count < initGraph.Vertexes.Count)
+            while (_result.Count < initGraph.Vertexes.Count)
             {
-                RowMinimize(ref initMatrix);
-                ColumnMinimize(ref initMatrix);
-                var elementToDelete = CalculatePenalties(ref initMatrix);
-                result.Add(elementToDelete);
-                RemoveItem(elementToDelete, ref initMatrix);
+                RowMinimize();
+                ColumnMinimize();
+                var elementToDelete = CalculatePenalties();
+                _result.Add(elementToDelete);
+                RemoveItem(elementToDelete);
             }
 
-            result = result.Select(t => new Tuple<int,int>(t.Item1 + 1, t.Item2 + 1))
+            _result = _result.Select(t => new Tuple<int,int>(t.Item1 + 1, t.Item2 + 1))
                 .OrderBy(r => r.Item1)
                 .ToList();
 
-            var firstVertex = result.First().Item1;
+            var firstVertex = _result.First().Item1;
             var current = firstVertex;
-            var intResult = new int[result.Count + 1];
+            var intResult = new int[_result.Count + 1];
             intResult[0] = current;
-            for (var i = 1; i < result.Count + 1; i++)
+            for (var i = 1; i < _result.Count + 1; i++)
             {
-                var tuple = result.Single(t => t.Item1 == current);
+                var tuple = _result.Single(t => t.Item1 == current);
                 current = tuple.Item2;
                 intResult[i] = tuple.Item2;
             }
@@ -39,7 +41,7 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
             return intResult;
         }
 
-        private void RemoveItem(Tuple<int, int> elementToDelete, ref double[,] matrix)
+        private void RemoveItem(Tuple<int, int> elementToDelete)
         {
             for (var k = 0; k < matrix.GetLength(0); k++)
             {
@@ -54,11 +56,11 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
             matrix[elementToDelete.Item2, elementToDelete.Item1] = double.PositiveInfinity;
         }
 
-        private double[,] GetMatrix(Graph initGraph)
+        private void InitMatrix(Graph initGraph)
         {
             var vertexes = initGraph.Vertexes;
             var vertexesCount = vertexes.Count;
-            var matrix = new double[vertexesCount, vertexesCount];
+            matrix = new double[vertexesCount, vertexesCount];
 
             foreach (var vertex in vertexes)
             {
@@ -80,61 +82,66 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
                     }
                 }
             }
-
-            return matrix;
         }
 
-        private void RowMinimize(ref double[,] matrix)
+        private void RowMinimize()
         {
             for (var i = 0; i < matrix.GetLength(0); i++)
             {
-                var min = double.PositiveInfinity;
-                for (var j = 0; j < matrix.GetLength(1); j++)
+                if (_result.All(t => t.Item1 != i))
                 {
-                    if (min > matrix[i, j])
+                    var min = double.PositiveInfinity;
+                    for (var j = 0; j < matrix.GetLength(1); j++)
                     {
-                        min = matrix[i, j];
+                        if (min > matrix[i, j])
+                        {
+                            min = matrix[i, j];
+                        }
                     }
-                }
 
-                for (var j = 0; j < matrix.GetLength(1); j++)
-                {
-                    matrix[i, j] -= min;
+                    for (var j = 0; j < matrix.GetLength(1); j++)
+                    {
+                        matrix[i, j] -= min;
+                    }
                 }
             }
         }
 
-        private void ColumnMinimize(ref double[,] matrix)
+        private void ColumnMinimize()
         {
             for (var i = 0; i < matrix.GetLength(0); i++)
             {
-                var min = double.PositiveInfinity;
-                for (var j = 0; j < matrix.GetLength(1); j++)
+                if (_result.All(t => t.Item2 != i))
                 {
-                    if (min > matrix[j, i])
+                    var min = double.PositiveInfinity;
+                    for (var j = 0; j < matrix.GetLength(1); j++)
                     {
-                        min = matrix[j, i];
+                        if (min > matrix[j, i])
+                        {
+                            min = matrix[j, i];
+                        }
                     }
-                }
 
-                for (var j = 0; j < matrix.GetLength(1); j++)
-                {
-                    matrix[j, i] -= min;
+                    for (var j = 0; j < matrix.GetLength(1); j++)
+                    {
+                        matrix[j, i] -= min;
+                    }
                 }
             }
         }
 
-        private Tuple<int, int> CalculatePenalties(ref double[,] matrix)
+        private Tuple<int, int> CalculatePenalties()
         {
-            var maxRow = 0;
-            var maxColumn = 0;
-            var maxSum = 0.0;
+            var maxRow = -1;
+            var maxColumn = -1;
+            var maxSum = -1.0;
+            var minElement = double.PositiveInfinity;
 
             for (var i = 0; i < matrix.GetLength(0); i++)
             {
                 for (var j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i, j] == 0)
+                    if (!double.IsPositiveInfinity(matrix[i, j]) && _result.All(t => t.Item1 != i) && _result.All(t => t.Item2 != j))
                     {
                         var minRow = double.PositiveInfinity;
                         for (var k = 0; k < matrix.GetLength(0); k++)
@@ -146,7 +153,7 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
                         }
 
                         var minColumn = double.PositiveInfinity;
-                        for (var k = 0; k < matrix.GetLength(0); k++)
+                        for (var k = 0; k < matrix.GetLength(1); k++)
                         {
                             if (k != i && matrix[k, j] < minColumn)
                             {
@@ -154,11 +161,14 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
                             }
                         }
 
-                        if (minColumn + minRow > maxSum)
+                        if (minColumn + minRow > maxSum && 
+                            !ElementCreatesLoop(i, j) &&
+                            matrix[i, j] < minElement)
                         {
                             maxSum = minColumn + minRow;
                             maxRow = i;
                             maxColumn = j;
+                            minElement = matrix[i, j];
                         }
                     }
                 }
@@ -167,6 +177,28 @@ namespace GraphAlgorhitms.Sources.TravellingSalesman
             var result = new Tuple<int, int>(maxRow, maxColumn);
 
             return result;
+        }
+
+        private bool ElementCreatesLoop(int i, int j)
+        {
+            var origin = _result.SingleOrDefault(t => t.Item1 == j);
+
+            if (origin == null)
+            {
+                return false;
+            }
+
+            for (var k = 0; k < matrix.GetLength(0) - 2 && origin != null; k++)
+            {
+                if (origin.Item2 == i)
+                {
+                    return true;
+                }
+
+                origin = _result.SingleOrDefault(t => t.Item1 == origin.Item2);
+            }
+
+            return false;
         }
     }
 }

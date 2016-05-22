@@ -15,6 +15,6 @@ namespace GraphAlgorhitms.Infrastructure
 
         public const string LineSeparator = "\r\n";
 
-        public const char Space = ' ';
+        public const string Space = " ";
     }
 }
